@@ -7,3 +7,4 @@ from app.models.conversation import Conversation, Message
 from app.models.notification import Notification
 from app.models.community import Community, CommunityMembership
 from app.models.events import Event, EventRSVP
+from app.models.conversation import Conversation, ConversationParticipant, Message

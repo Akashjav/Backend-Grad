@@ -1,1 +1,10 @@
+alembic
+asyncpg
+bcrypt
+email-validator
+fastapi
+python-dotenv
+python-jose
 python-multipart
+SQLAlchemy
+uvicorn

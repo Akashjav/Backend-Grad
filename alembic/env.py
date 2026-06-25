@@ -1,4 +1,12 @@
 from logging.config import fileConfig
+from pathlib import Path
+import sys
+
+
+_project_root = Path(__file__).resolve().parents[1]
+_venv_site_packages = _project_root / "venv" / "Lib" / "site-packages"
+if _venv_site_packages.exists():
+    sys.path.insert(0, str(_venv_site_packages))
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
