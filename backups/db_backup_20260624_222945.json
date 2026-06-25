@@ -1,0 +1,482 @@
+{
+  "created_at": "2026-06-25T05:29:45.530198+00:00",
+  "alembic_revision": "a1b2c3d4e5f6",
+  "tables": {
+    "alembic_version": {
+      "columns": [
+        {
+          "column_name": "version_num",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": [
+        {
+          "version_num": "a1b2c3d4e5f6"
+        }
+      ]
+    },
+    "alumni_profiles": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": "nextval('alumni_profiles_id_seq'::regclass)"
+        },
+        {
+          "column_name": "user_id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "focus",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "chapter",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "availability",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "response_time",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "current_project",
+          "data_type": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "impact",
+          "data_type": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "user_id": "06a4b57b-a3b0-40d9-aec1-06a60bfbf56e",
+          "focus": "Software developer",
+          "chapter": "Coimbatore",
+          "availability": "In 1 day",
+          "response_time": "In a day",
+          "current_project": "Chatbot",
+          "impact": "string"
+        }
+      ]
+    },
+    "communities": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": "nextval('communities_id_seq'::regclass)"
+        },
+        {
+          "column_name": "name",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "category",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "blurb",
+          "data_type": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "member_count",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "cadence",
+          "data_type": "character varying",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "activity",
+          "data_type": "character varying",
+          "is_nullable": "YES",
+          "column_default": null
+        }
+      ],
+      "rows": [
+        {
+          "id": "1",
+          "name": "Java Placement Prep",
+          "category": "Placement",
+          "blurb": "A community for students preparing Java and DSA for placements.",
+          "member_count": 0,
+          "cadence": "Weekly discussion",
+          "activity": "Active today"
+        }
+      ]
+    },
+    "community_memberships": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": "nextval('community_memberships_id_seq'::regclass)"
+        },
+        {
+          "column_name": "community_id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "user_id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "joined_at",
+          "data_type": "timestamp without time zone",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": []
+    },
+    "conversations": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": "nextval('conversations_id_seq'::regclass)"
+        },
+        {
+          "column_name": "title",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "created_by",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": []
+    },
+    "events": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": "nextval('events_id_seq'::regclass)"
+        },
+        {
+          "column_name": "title",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "starts_at",
+          "data_type": "timestamp without time zone",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "location",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "attendees",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "capacity",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "description",
+          "data_type": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "event_type",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": []
+    },
+    "messages": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": "nextval('messages_id_seq'::regclass)"
+        },
+        {
+          "column_name": "conversation_id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "author_id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "body",
+          "data_type": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp without time zone",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": []
+    },
+    "notifications": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": "nextval('notifications_id_seq'::regclass)"
+        },
+        {
+          "column_name": "user_id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "kind",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "title",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "body",
+          "data_type": "text",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "read",
+          "data_type": "boolean",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": []
+    },
+    "profiles": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "integer",
+          "is_nullable": "NO",
+          "column_default": "nextval('profiles_id_seq'::regclass)"
+        },
+        {
+          "column_name": "user_id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "display_name",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "headline",
+          "data_type": "character varying",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "company",
+          "data_type": "character varying",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "location",
+          "data_type": "character varying",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "graduation_year",
+          "data_type": "integer",
+          "is_nullable": "YES",
+          "column_default": null
+        },
+        {
+          "column_name": "bio",
+          "data_type": "text",
+          "is_nullable": "YES",
+          "column_default": null
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "user_id": "c5375c20-76ca-4126-89db-552f1276743c",
+          "display_name": "Test User",
+          "headline": null,
+          "company": null,
+          "location": null,
+          "graduation_year": null,
+          "bio": null
+        },
+        {
+          "id": 2,
+          "user_id": "2d2c3278-4bfc-4ec1-a773-a6b3c0a55352",
+          "display_name": "string",
+          "headline": null,
+          "company": null,
+          "location": null,
+          "graduation_year": null,
+          "bio": null
+        },
+        {
+          "id": 3,
+          "user_id": "06a4b57b-a3b0-40d9-aec1-06a60bfbf56e",
+          "display_name": "Akash",
+          "headline": null,
+          "company": null,
+          "location": null,
+          "graduation_year": null,
+          "bio": null
+        }
+      ]
+    },
+    "users": {
+      "columns": [
+        {
+          "column_name": "id",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "email",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "password_hash",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "role",
+          "data_type": "character varying",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "is_active",
+          "data_type": "boolean",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "is_verified",
+          "data_type": "boolean",
+          "is_nullable": "NO",
+          "column_default": null
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp without time zone",
+          "is_nullable": "NO",
+          "column_default": null
+        }
+      ],
+      "rows": [
+        {
+          "id": "c5375c20-76ca-4126-89db-552f1276743c",
+          "email": "test@example.com",
+          "password_hash": "$2b$12$U9xxiYAEvMY/eWqhLr1tj.DpuKPJ3hfFeEy706YKrNVTw0oot7kWS",
+          "role": "student",
+          "is_active": true,
+          "is_verified": false,
+          "created_at": "2026-06-24 09:01:52.518057"
+        },
+        {
+          "id": "2d2c3278-4bfc-4ec1-a773-a6b3c0a55352",
+          "email": "user@example.com",
+          "password_hash": "$2b$12$9zXak6FKyOAakgzmNxk1yucM0Ls09rdD7Du8axBAjzLf5VSDuGk8q",
+          "role": "student",
+          "is_active": true,
+          "is_verified": false,
+          "created_at": "2026-06-24 09:02:32.374398"
+        },
+        {
+          "id": "06a4b57b-a3b0-40d9-aec1-06a60bfbf56e",
+          "email": "akashkma2005@gmail.com",
+          "password_hash": "$2b$12$ebtHhcWk/0Tl.n7MKc/RgOni3hHoHGSWab44sBizgCNDx9a6l6FfO",
+          "role": "student",
+          "is_active": true,
+          "is_verified": false,
+          "created_at": "2026-06-24 09:04:01.136599"
+        }
+      ]
+    }
+  }
+}
