@@ -1,7 +1,7 @@
-from sqlalchemy import String, ForeignKey, Text, Uuid
+from sqlalchemy import String, ForeignKey, Text, Uuid, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
+from datetime import datetime
 from app.models.user import Base
-
 
 class AlumniProfile(Base):
     __tablename__ = "alumni_profiles"
@@ -14,3 +14,4 @@ class AlumniProfile(Base):
     response_time: Mapped[str] = mapped_column(String)
     current_project: Mapped[str] = mapped_column(Text)
     impact: Mapped[str] = mapped_column(Text)
+    verified_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)

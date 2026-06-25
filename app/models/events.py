@@ -19,6 +19,7 @@ class Event(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     attendees: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[str] = mapped_column(String, default="draft")
 
 
 class EventRSVP(Base):
