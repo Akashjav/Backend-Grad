@@ -1,4 +1,14 @@
-from fastapi import FastAPI
+import asyncio
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from app.core.config import settings
+
+if hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 from app.api.V1.auth import router as auth_router
 from app.api.V1.users import router as users_router
 from app.api.V1.alumni import router as alumni_router
@@ -11,16 +21,49 @@ from app.api.V1.dashboard import router as dashboard_router
 from app.api.V1.admin import router as admin_router
 
 
-app = FastAPI()
-    
+app = FastAPI(
+    title=settings.APP_NAME,
+    version="1.0.0"
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "Internal server error",
+            "path": str(request.url.path)
+        }
+    )
+
 
 @app.get("/")
-def home():
-    return {"message":"Alumni Platform API"}
+def root():
+    return {
+        "message": "Alumni Connect API is running",
+        "docs": "/docs"
+    }
+
 
 @app.get("/health")
 def health():
-    return {"status":"healthy"}    
+    return {"status": "healthy"}
+
+
+@app.get("/api/health")
+def api_health():
+    return {"status": "healthy"}
+
 
 app.include_router(auth_router)
 app.include_router(users_router)

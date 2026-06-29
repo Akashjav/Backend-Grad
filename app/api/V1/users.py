@@ -3,9 +3,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-import os
 from uuid import UUID
 
+from app.core.config import settings
 from app.api.deps import get_db
 from app.models.user import User
 from app.models.profile import Profile
@@ -14,16 +14,17 @@ router = APIRouter(prefix="/api", tags=["Users"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/signin")
 
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
 ):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token,
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM],
+        )
         user_id = payload.get("sub")
 
         if user_id is None:

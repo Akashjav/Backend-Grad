@@ -46,7 +46,9 @@ _db_url = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
 if _db_url is None:
     _sync_db_url = None
 else:
-    _sync_db_url = _db_url.replace("+asyncpg", "").replace("+aiopg", "")
+    _sync_db_url = _db_url.replace("+asyncpg", "+psycopg").replace("+aiopg", "+psycopg")
+    if _sync_db_url.startswith("postgresql://"):
+        _sync_db_url = _sync_db_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

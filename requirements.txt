@@ -1,10 +1,33 @@
-alembic
-asyncpg
-bcrypt
-email-validator
-fastapi
-python-dotenv
-python-jose
-python-multipart
-SQLAlchemy
-uvicorn
+# FastAPI
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+
+# Database
+sqlalchemy==2.0.42
+psycopg[binary]==3.3.3
+alembic==1.16.4
+
+# Environment Variables
+python-dotenv==1.1.1
+
+# Validation
+pydantic==2.11.7
+email-validator==2.2.0
+
+# Authentication & Security
+python-jose[cryptography]==3.5.0
+bcrypt==4.3.0
+python-multipart==0.0.20
+
+# Optional AI Integration
+openai==1.97.1
+
+# HTTP Client
+httpx==0.28.1
+
+# Testing
+pytest==8.4.1
+pytest-asyncio==1.1.0
+
+# Development
+ruff==0.12.5

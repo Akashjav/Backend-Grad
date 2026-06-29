@@ -1,29 +1,33 @@
 from datetime import datetime, timedelta
 from jose import jwt
 import bcrypt
-import os
 
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
+from app.core.config import settings
 
 
-def _normalize_password(password: str) -> bytes:
-    if not password:
-        return b""
+def _password_bytes(password: str) -> bytes:
     return password.encode("utf-8")[:72]
 
 
 def hash_password(password: str):
-    return bcrypt.hashpw(_normalize_password(password), bcrypt.gensalt()).decode("utf-8")
+    return bcrypt.hashpw(_password_bytes(password), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(password: str, hashed_password: str):
-    return bcrypt.checkpw(_normalize_password(password), hashed_password.encode("utf-8"))
+    return bcrypt.checkpw(
+        _password_bytes(password),
+        hashed_password.encode("utf-8"),
+    )
 
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(
+        to_encode,
+        settings.JWT_SECRET_KEY,
+        algorithm=settings.JWT_ALGORITHM,
+    )
