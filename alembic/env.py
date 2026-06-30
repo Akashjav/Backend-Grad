@@ -11,6 +11,7 @@ if _venv_site_packages.exists():
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from sqlalchemy import create_engine
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import create_async_engine
 import asyncio
 import os
@@ -39,10 +40,29 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-# Prefer DATABASE_URL from environment (used by app). If it specifies an async
-# driver (e.g. postgresql+asyncpg://) Alembic can't use the async driver, so
-# create a sync URL variant for migrations.
-_db_url = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
+def _normalize_database_url(url: str | None) -> str | None:
+    if url and url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if not url or not url.startswith("postgresql+asyncpg://"):
+        return url
+
+    parsed_url = make_url(url)
+    query = dict(parsed_url.query)
+    sslmode = query.pop("sslmode", None)
+    if sslmode is None:
+        return url
+    if isinstance(sslmode, tuple):
+        sslmode = sslmode[-1]
+    query.setdefault("ssl", sslmode)
+
+    return parsed_url.set(query=query).render_as_string(hide_password=False)
+
+
+# Prefer DATABASE_URL from environment (used by app). Online migrations can run
+# with async drivers; offline SQL rendering uses the sync URL variant below.
+_db_url = _normalize_database_url(
+    os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
+)
 if _db_url is None:
     _sync_db_url = None
 else:

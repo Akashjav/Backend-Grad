@@ -14,3 +14,6 @@ from app.models.settings import (
     UserSecuritySettings,
     UserLanguageSettings
 )
+from app.models.student import StudentProfile
+from app.models.alumni import AlumniProfile
+from app.models.student_document import StudentDocument

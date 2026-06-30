@@ -19,6 +19,7 @@ from app.api.V1.notifications import router as notifications_router
 from app.api.V1.settings import router as settings_router
 from app.api.V1.dashboard import router as dashboard_router
 from app.api.V1.admin import router as admin_router
+from app.api.V1.student_documents import router as student_documents_router
 
 
 app = FastAPI(
@@ -75,3 +76,4 @@ app.include_router(notifications_router)
 app.include_router(settings_router)
 app.include_router(dashboard_router)
 app.include_router(admin_router)
+app.include_router(student_documents_router)

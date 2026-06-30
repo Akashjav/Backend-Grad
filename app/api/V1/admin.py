@@ -10,6 +10,8 @@ from app.api.V1.users import get_current_user
 from app.models.user import User
 from app.models.alumni import AlumniProfile
 from app.models.events import Event
+from app.models.student_document import StudentDocument
+from app.models.student import StudentProfile
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
@@ -119,3 +121,43 @@ async def publish_event(
     await db.commit()
 
     return {"message": "Event published successfully"}
+
+@router.patch("/student-documents/{document_id}/verify")
+async def verify_student_document(
+    document_id: int,
+    status: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    check_admin(current_user)
+
+    if status not in ["approved", "rejected"]:
+        raise HTTPException(status_code=400, detail="Status must be approved or rejected")
+
+    result = await db.execute(
+        select(StudentDocument).where(StudentDocument.id == document_id)
+    )
+    document = result.scalar_one_or_none()
+
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    document.verification_status = status
+    document.verified_by = current_user.id
+    document.verified_at = datetime.utcnow()
+
+    student_result = await db.execute(
+        select(StudentProfile).where(StudentProfile.user_id == document.user_id)
+    )
+    student_profile = student_result.scalar_one_or_none()
+
+    if student_profile:
+        student_profile.verification_status = status
+
+    await db.commit()
+
+    return {
+        "message": f"Student document {status} successfully",
+        "document_id": document.id,
+        "status": document.verification_status
+    }
