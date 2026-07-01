@@ -7,6 +7,7 @@ from app.api.V1.users import get_current_user
 from app.models.user import User
 from app.models.mentorship import MentorshipRequest, MentorshipSession
 from app.schemas.mentorship import MentorshipRequestCreate, MentorshipSessionCreate
+from app.models.alumni_payment import AlumniEarning
 
 router = APIRouter(prefix="/api/mentorship", tags=["Mentorship"])
 
@@ -271,6 +272,24 @@ async def complete_mentorship_session(
         raise HTTPException(status_code=404, detail="Session not found")
 
     session.status = "completed"
+
+    existing_earning_result = await db.execute(
+        select(AlumniEarning).where(
+            AlumniEarning.session_id == session.id
+        )
+    )
+    existing_earning = existing_earning_result.scalar_one_or_none()
+
+    if not existing_earning:
+        earning = AlumniEarning(
+            alumni_id=session.alumni_id,
+            student_id=session.student_id,
+            session_id=session.id,
+            amount=300.0,
+            status="unpaid"
+        )
+        db.add(earning)
+
     await db.commit()
 
     return {

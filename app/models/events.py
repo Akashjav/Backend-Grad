@@ -2,6 +2,7 @@ import uuid
 from sqlalchemy import String, Text, Integer, DateTime, ForeignKey, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
+
 from app.models.user import Base
 
 
@@ -19,6 +20,10 @@ class Event(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     attendees: Mapped[int] = mapped_column(Integer, default=0)
+    domain_id: Mapped[int] = mapped_column(ForeignKey("domains.id"), nullable=True)
+    speaker_name: Mapped[str] = mapped_column(String, nullable=True)
+    speaker_company: Mapped[str] = mapped_column(String, nullable=True)
+    cover_image_url: Mapped[str] = mapped_column(String, nullable=True)
     status: Mapped[str] = mapped_column(String, default="draft")
 
 

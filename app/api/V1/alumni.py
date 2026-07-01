@@ -11,6 +11,8 @@ from app.models.user import User
 from app.api.V1.users import get_current_user
 from app.models.user import User
 from app.schemas.alumni import AlumniCreate
+from app.models.subscription import Subscription
+from app.models.notification import Notification
 
 router = APIRouter(prefix="/api/alumni", tags=["Alumni"])
 

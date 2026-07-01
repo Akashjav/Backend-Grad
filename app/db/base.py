@@ -27,3 +27,5 @@ from app.models.community import (
     CommunityPostReply
 )
 from app.models.subscription import Domain, SubscriptionPlan, Subscription, Payment
+from app.models.alumni_payment import AlumniEarning, AlumniPayout
+from app.models.ai_chat import AIChatMessage

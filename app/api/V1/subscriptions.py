@@ -27,8 +27,12 @@ async def create_domain(
         raise HTTPException(status_code=403, detail="Only admin can create domains")
 
     existing = await db.execute(select(Domain).where(Domain.name == data.name))
-    if existing.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Domain already exists")
+    existing_domain = existing.scalar_one_or_none()
+    if existing_domain:
+        return {
+            "message": "Domain already exists",
+            "domain_id": existing_domain.id
+        }
 
     domain = Domain(
         name=data.name,

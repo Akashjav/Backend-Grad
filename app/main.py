@@ -24,6 +24,7 @@ from app.api.V1.mentorship import router as mentorship_router
 from app.api.V1.jobs import router as jobs_router
 from app.api.V1.community_posts import router as community_posts_router
 from app.api.V1.subscriptions import router as subscriptions_router
+from app.api.V1.ai_chat import router as ai_chat_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -84,3 +85,4 @@ app.include_router(mentorship_router)
 app.include_router(jobs_router)
 app.include_router(community_posts_router)
 app.include_router(subscriptions_router)
+app.include_router(ai_chat_router)

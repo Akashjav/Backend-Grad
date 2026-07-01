@@ -7,7 +7,9 @@ from app.api.deps import get_db
 from app.api.V1.users import get_current_user
 from app.models.user import User
 from app.models.events import Event, EventRSVP
+from app.models.subscription import Domain
 from app.schemas.event import EventCreate
+
 
 router = APIRouter(prefix="/api/events", tags=["Events"])
 
@@ -18,6 +20,13 @@ async def create_event(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
+    if data.domain_id is not None:
+        domain_result = await db.execute(
+            select(Domain).where(Domain.id == data.domain_id)
+        )
+        if not domain_result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Domain not found")
+
     event = Event(
         title=data.title,
         starts_at=data.starts_at,
@@ -28,7 +37,12 @@ async def create_event(
         audience=data.audience,
         description=data.description,
         capacity=data.capacity,
-        attendees=0
+        attendees=0,
+        domain_id=data.domain_id,
+        speaker_name=data.speaker_name,
+        speaker_company=data.speaker_company,
+        cover_image_url=data.cover_image_url,
+        status="draft"
     )
 
     db.add(event)
@@ -62,6 +76,7 @@ async def get_events(
         is_rsvped = rsvp_result.scalar_one_or_none() is not None
 
         output.append({
+
             "id": event.id,
             "title": event.title,
             "starts_at": event.starts_at,
@@ -73,7 +88,12 @@ async def get_events(
             "description": event.description,
             "capacity": event.capacity,
             "attendees": event.attendees,
-            "is_rsvped": is_rsvped
+            "is_rsvped": is_rsvped,
+            "domain_id": event.domain_id,
+            "speaker_name": event.speaker_name,
+            "speaker_company": event.speaker_company,
+            "cover_image_url": event.cover_image_url,
+            "status": event.status
         })
 
     return output
@@ -114,7 +134,12 @@ async def get_event_detail(
         "description": event.description,
         "capacity": event.capacity,
         "attendees": event.attendees,
-        "is_rsvped": is_rsvped
+        "is_rsvped": is_rsvped,
+        "domain_id": event.domain_id,
+        "speaker_name": event.speaker_name,
+        "speaker_company": event.speaker_company,
+        "cover_image_url": event.cover_image_url,
+        "status": event.status
     }
 
 
