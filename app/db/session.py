@@ -31,6 +31,8 @@ DATABASE_URL = _normalize_database_url(DATABASE_URL)
 engine = create_async_engine(
     DATABASE_URL,
     echo=settings.SQL_ECHO,
+    pool_pre_ping=True,
+    pool_recycle=300,
 )
 
 AsyncSessionLocal = async_sessionmaker(
