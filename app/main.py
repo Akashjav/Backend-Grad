@@ -20,6 +20,8 @@ from app.api.V1.settings import router as settings_router
 from app.api.V1.dashboard import router as dashboard_router
 from app.api.V1.admin import router as admin_router
 from app.api.V1.student_documents import router as student_documents_router
+from app.api.V1.mentorship import router as mentorship_router
+from app.api.V1.jobs import router as jobs_router
 
 
 app = FastAPI(
@@ -77,3 +79,5 @@ app.include_router(settings_router)
 app.include_router(dashboard_router)
 app.include_router(admin_router)
 app.include_router(student_documents_router)
+app.include_router(mentorship_router)
+app.include_router(jobs_router)

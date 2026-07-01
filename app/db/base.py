@@ -17,3 +17,5 @@ from app.models.settings import (
 from app.models.student import StudentProfile
 from app.models.alumni import AlumniProfile
 from app.models.student_document import StudentDocument
+from app.models.mentorship import MentorshipRequest, MentorshipSession
+from app.models.job import Job, SavedJob, JobApplication
