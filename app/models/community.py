@@ -24,3 +24,39 @@ class CommunityMembership(Base):
     community_id: Mapped[str] = mapped_column(Uuid(as_uuid=False), ForeignKey("communities.id"))
     user_id: Mapped[str] = mapped_column(Uuid(as_uuid=False), ForeignKey("users.id"))
     joined_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+class CommunityPost(Base):
+    __tablename__ = "community_posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    community_id: Mapped[str] = mapped_column(Uuid(as_uuid=False), ForeignKey("communities.id"), nullable=False)
+    author_id: Mapped[str] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    title: Mapped[str] = mapped_column(String, nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    tags: Mapped[str] = mapped_column(Text, nullable=True)
+
+    likes_count: Mapped[int] = mapped_column(Integer, default=0)
+    replies_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class CommunityPostLike(Base):
+    __tablename__ = "community_post_likes"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    post_id: Mapped[int] = mapped_column(ForeignKey("community_posts.id"), nullable=False)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class CommunityPostReply(Base):
+    __tablename__ = "community_post_replies"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    post_id: Mapped[int] = mapped_column(ForeignKey("community_posts.id"), nullable=False)
+    author_id: Mapped[str] = mapped_column(ForeignKey("users.id"), nullable=False)
+
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
