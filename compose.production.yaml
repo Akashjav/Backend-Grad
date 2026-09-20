@@ -1,0 +1,47 @@
+# External PostgreSQL from .env; no database contents are created or deleted here.
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--maxmemory", "128mb", "--maxmemory-policy", "noeviction"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+  api:
+    build: .
+    env_file: .env
+    environment:
+      APP_ENV: production
+      REDIS_URL: redis://redis:6379/0
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:?Set the API hostname and localhost for health checks}
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set explicit HTTPS frontend origins}
+      RATE_LIMIT_ENABLED: "true"
+      SQL_ECHO: "false"
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-4}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-400}
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
+      DB_MAX_OVERFLOW: ${DB_MAX_OVERFLOW:-5}
+      DOCUMENT_STORAGE_PATH: /app/uploads/private
+      STUDENT_DOCUMENT_STORAGE_PATH: /app/uploads/student_documents
+    ports: ["127.0.0.1:8000:8000"]
+    volumes: ["documents:/app/uploads"]
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 40s
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    read_only: true
+    tmpfs: ["/tmp:size=128m"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready',timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+volumes:
+  documents:

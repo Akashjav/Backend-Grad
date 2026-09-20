@@ -1,5 +1,16 @@
 .env
+.env.*
+!.env.production.example
+.neon/
 venv/
+.venv/
+tmp/
+*.db
+uploads/
+.venv/
+tmp/
+*.db
+uploads/
 __pycache__/
 *.py[cod]
 .pytest_cache/

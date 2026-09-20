@@ -28,11 +28,19 @@ def _normalize_database_url(url: str) -> str:
 
 DATABASE_URL = _normalize_database_url(DATABASE_URL)
 
+pool_options = {}
+if DATABASE_URL.startswith("postgresql+asyncpg://"):
+    pool_options = dict(pool_size=settings.DB_POOL_SIZE,
+        max_overflow=settings.DB_MAX_OVERFLOW, pool_timeout=settings.DB_POOL_TIMEOUT,
+        pool_use_lifo=True, connect_args={"command_timeout": settings.DB_COMMAND_TIMEOUT, "timeout": 10})
+
 engine = create_async_engine(
     DATABASE_URL,
     echo=settings.SQL_ECHO,
     pool_pre_ping=True,
     pool_recycle=300,
+    hide_parameters=True,
+    **pool_options,
 )
 
 AsyncSessionLocal = async_sessionmaker(

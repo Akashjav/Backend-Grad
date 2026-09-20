@@ -29,3 +29,6 @@ from app.models.community import (
 from app.models.subscription import Domain, SubscriptionPlan, Subscription, Payment
 from app.models.alumni_payment import AlumniEarning, AlumniPayout
 from app.models.ai_chat import AIChatMessage
+from app.models.platform import *
+from app.models.development import *
+from app.models import performance_indexes  # noqa: F401

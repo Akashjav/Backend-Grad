@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
 
-alembic upgrade head
-
-uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
+# Run migrations once as a release step, not once per worker or replica.
+exec python scripts/serve.py

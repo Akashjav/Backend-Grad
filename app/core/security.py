@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
-from jose import jwt
+from app.core.tokens import jwt
 import bcrypt
+import hashlib
+import hmac
 
 from app.core.config import settings
 
@@ -14,6 +16,10 @@ def hash_password(password: str):
 
 
 def verify_password(password: str, hashed_password: str):
+    if hashed_password.startswith("scrypt$"):
+        _, salt, expected = hashed_password.split("$")
+        actual = hashlib.scrypt(password.encode(), salt=salt.encode(), n=16384, r=8, p=1).hex()
+        return hmac.compare_digest(actual, expected)
     return bcrypt.checkpw(
         _password_bytes(password),
         hashed_password.encode("utf-8"),

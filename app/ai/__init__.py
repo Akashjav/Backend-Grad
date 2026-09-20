@@ -1,0 +1,1 @@
+"""Replaceable, deterministic intelligence providers."""
