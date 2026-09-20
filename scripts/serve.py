@@ -7,6 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 if __name__ == "__main__":
+    # Validate once in the parent instead of repeatedly respawning failing workers.
+    try:
+        from app.core.config import settings  # noqa: F401
+    except (RuntimeError, ValueError) as exc:
+        print(f"Startup configuration error: {exc}", file=sys.stderr)
+        raise SystemExit(1) from None
     import uvicorn
     uvicorn.run("app.main:app", host=os.getenv("HOST", "0.0.0.0"), port=int(os.getenv("PORT", "8000")),
         workers=int(os.getenv("WEB_CONCURRENCY", "4")),

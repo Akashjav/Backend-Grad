@@ -34,6 +34,6 @@ services:
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "30"
       - key: CORS_ORIGINS
-        sync: false
+        value: https://frontend-grad.vercel.app
       - key: SQL_ECHO
         value: "false"

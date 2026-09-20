@@ -1,7 +1,42 @@
 import os
+import json
+from urllib.parse import urlsplit
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+def cors_origins(raw: str, production: bool) -> list[str]:
+    message = (
+        "Invalid CORS_ORIGINS: set the deployed frontend origin, for example "
+        "https://frontend.example.com. Separate multiple origins with commas "
+        "or use a JSON array. Production requires HTTPS, without wildcards, "
+        "URL paths, query strings or credentials. Configure this in Render Environment."
+    )
+    try:
+        entries = json.loads(raw) if raw.strip().startswith("[") else raw.split(",")
+        if not isinstance(entries, list) or any(not isinstance(v, str) for v in entries):
+            raise ValueError
+        origins = []
+        for entry in entries:
+            origin = entry.strip().rstrip("/")
+            if not origin:
+                continue
+            if production:
+                parsed = urlsplit(origin)
+                if (parsed.scheme != "https" or not parsed.hostname or "*" in origin
+                        or parsed.username is not None or parsed.password is not None
+                        or parsed.path or "?" in origin or "#" in origin
+                        or any(c.isspace() for c in origin) or "\\" in origin):
+                    raise ValueError
+                _ = parsed.port
+            if origin not in origins:
+                origins.append(origin)
+        if production and not origins:
+            raise ValueError
+        return origins
+    except (ValueError, TypeError):
+        raise RuntimeError(message) from None
 
 
 class Settings:
@@ -17,10 +52,10 @@ class Settings:
         os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
     )
 
-    CORS_ORIGINS: list[str] = os.getenv(
+    CORS_ORIGINS: list[str] = cors_origins(os.getenv(
         "CORS_ORIGINS",
-        "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173"
-    ).split(",")
+        "" if APP_ENV == "production" else "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173"
+    ), APP_ENV == "production")
 
 
 settings = Settings()
@@ -44,8 +79,6 @@ if settings.APP_ENV == "production":
         raise RuntimeError("Production requires a strong random JWT_SECRET_KEY")
     if not settings.DATABASE_URL.startswith(("postgresql://", "postgresql+asyncpg://")):
         raise RuntimeError("Production requires PostgreSQL")
-    if not settings.CORS_ORIGINS or any(not v.startswith("https://") or "*" in v for v in settings.CORS_ORIGINS):
-        raise RuntimeError("Production CORS requires explicit HTTPS origins")
     if not settings.ALLOWED_HOSTS or "*" in settings.ALLOWED_HOSTS:
         raise RuntimeError("Production requires explicit ALLOWED_HOSTS")
     if settings.SQL_ECHO:
